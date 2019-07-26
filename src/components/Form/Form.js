@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 export default class Form extends Component {
   constructor() {
@@ -6,7 +7,7 @@ export default class Form extends Component {
     this.state = {
       name: "",
       price: "",
-      imgurl: ""
+      image: ""
     };
   }
   handleChange(e) {
@@ -14,20 +15,13 @@ export default class Form extends Component {
       [e.target.placeholder]: e.target.value
     });
   }
-//   cancel = () => {
-//       this.setState({
-//         name: "",
-//         price: "",
-//         imgurl: ""
-//       })
-//   }
-//   submitItem () {
-//     axios.post("/api/items", {item_name, last_seen_location, last_seen_time}).then ( res => {
-//         this.setState({
-//           items: res.data
-//         })
-//       });
-//   }
+  submitItem(body) {
+    axios.post("/api/product", body).then(res => {
+      this.setState({
+        inventory: res.data
+      });
+    });
+  }
   render() {
     return (
       <div>
@@ -42,23 +36,38 @@ export default class Form extends Component {
             <input
               onChange={e => this.handleChange(e)}
               type="text"
-              placeholder="imgurl"
+              placeholder="image"
+              value={this.state.image}
             />
             <p>Product Name:</p>
             <input
               onChange={e => this.handleChange(e)}
               type="text"
               placeholder="name"
+              value={this.state.name}
             />
             <p>Price:</p>
             <input
               onChange={e => this.handleChange(e)}
               type="text"
               placeholder="price"
+              value={this.state.price}
             />
             <div>
               <button onClick={this.cancel}>Cancel</button>
-              <button onClick={this.submitItem}>Add to Inventory</button>
+              <button
+                onClick={() => {
+                  this.submitItem(this.state)
+                  this.props.getThings()
+                  this.setState({
+                    name: "",
+                    price: "",
+                    image: ""
+                  });
+                }}
+              >
+                Add to Inventory
+              </button>
             </div>
           </form>
         </div>
@@ -66,3 +75,11 @@ export default class Form extends Component {
     );
   }
 }
+
+//   cancel = () => {
+//       this.setState({
+//         name: "",
+//         price: "",
+//         imgurl: ""
+//       })
+//   }

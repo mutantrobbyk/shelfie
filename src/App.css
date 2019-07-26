@@ -18,6 +18,7 @@ body {
   height: 200px;
   width: 400px;
   border: solid blue;
+  display: flex;
 }
 .realimage {
   width: 100px;
